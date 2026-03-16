@@ -11,8 +11,8 @@ const steps = [
   },
   {
     icon: CreditCard,
-    title: "Escolha seu plano",
-    description: "Do Starter ao Scale — comece com R$ 97/mês.",
+    title: "Assine o Founder",
+    description: "R$ 249,90/mês. Inclui tudo.",
   },
   {
     icon: BarChart3,

@@ -104,7 +104,7 @@ export function NotificationDropdown({ align = "end" }: NotificationDropdownProp
           )}
         </div>
         <div className="border-t p-2">
-          <Link href="/app/atendimentos">
+          <Link href="/app/leads">
             <Button variant="ghost" size="sm" className="w-full text-xs">
               Ver todas as notificações
             </Button>

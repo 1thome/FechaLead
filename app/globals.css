@@ -52,6 +52,11 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem; /* Compensa o header fixo (h-16) */
+  }
+  /* Compensa o header fixo ao rolar até as seções */
+  section[id] {
+    scroll-margin-top: 5rem;
   }
   * {
     @apply border-border;

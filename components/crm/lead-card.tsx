@@ -85,9 +85,9 @@ export const LeadCard = memo(function LeadCard({ lead, isDragging }: LeadCardPro
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem asChild>
-                    <Link href="/app/atendimentos">
+                    <Link href={`/app/leads?lead=${lead.id}`}>
                       <MessageSquare className="mr-2 h-4 w-4" />
-                      Ver conversa
+                      Ver detalhes
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>

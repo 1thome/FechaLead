@@ -89,7 +89,7 @@ export function DashboardCharts({ chartData }: DashboardChartsProps) {
       <Card className="overflow-hidden">
         <CardHeader>
           <CardTitle>Comparativo semanal</CardTitle>
-          <p className="text-sm text-muted-foreground">Barras interativas</p>
+          <p className="text-sm text-muted-foreground">Leads por dia da semana</p>
         </CardHeader>
         <CardContent>
           <div className="h-[280px]">{barChart}</div>

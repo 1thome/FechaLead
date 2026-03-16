@@ -8,7 +8,7 @@ import { getDashboardMetrics, getLeads } from "@/lib/api"
 import { AppThreePanel } from "@/components/layout/app-three-panel"
 import { useLeadStore } from "@/store/useLeadStore"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, MessageSquare, TrendingUp, Mail, ChevronRight, MessageCircle, UserPlus, ArrowRight } from "lucide-react"
+import { Users, TrendingUp, ChevronRight, UserPlus, ArrowRight, Target } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const DashboardCharts = dynamic(
@@ -34,10 +34,10 @@ const STATUS_OPTIONS = [
 ] as const
 
 const RECENT_ACTIVITIES = [
-  { id: "1", type: "message", text: "Nova mensagem de João Silva", time: "2 min atrás", icon: MessageCircle },
+  { id: "1", type: "lead", text: "João Silva adicionado como lead", time: "2 min atrás", icon: UserPlus },
   { id: "2", type: "status", text: "Maria Santos movida para Negociação", time: "1 hora atrás", icon: ArrowRight },
-  { id: "3", type: "lead", text: "Novo lead: Carlos Souza", time: "5 min atrás", icon: UserPlus },
-  { id: "4", type: "message", text: "Pedro Oliveira respondeu a proposta", time: "Ontem", icon: MessageCircle },
+  { id: "3", type: "lead", text: "Novo lead: Fernanda Souza", time: "5 min atrás", icon: UserPlus },
+  { id: "4", type: "status", text: "Pedro Oliveira em negociação", time: "Ontem", icon: ArrowRight },
   { id: "5", type: "status", text: "Ana Costa fechou negócio", time: "3 dias atrás", icon: ArrowRight },
 ]
 
@@ -128,15 +128,15 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </Link>
-          <Link href="/app/atendimentos">
+          <Link href="/app/leads">
             <Card className="cursor-pointer transition-shadow hover:shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Conversas ativas</CardTitle>
-                <MessageSquare className="h-4 w-4 text-primary" />
+                <CardTitle className="text-sm font-medium">Leads ativos</CardTitle>
+                <Users className="h-4 w-4 text-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{metrics.activeConversations}</div>
-                <p className="text-xs text-muted-foreground">Em andamento</p>
+                <div className="text-2xl font-bold">{displayLeads.length}</div>
+                <p className="text-xs text-muted-foreground">Total de leads</p>
               </CardContent>
             </Card>
           </Link>
@@ -150,16 +150,18 @@ export default function DashboardPage() {
               <p className="text-xs text-muted-foreground">Este mês</p>
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Mensagens do dia</CardTitle>
-              <Mail className="h-4 w-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{metrics.messagesToday}</div>
-              <p className="text-xs text-muted-foreground">Hoje</p>
-            </CardContent>
-          </Card>
+          <Link href="/app/leads">
+            <Card className="cursor-pointer transition-shadow hover:shadow-md">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Leads fechados</CardTitle>
+                <Target className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{metrics.closedLeads ?? 0}</div>
+                <p className="text-xs text-muted-foreground">Total de vendas</p>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       )}
 
@@ -177,7 +179,7 @@ export default function DashboardPage() {
           {filteredLeads.map((lead) => (
             <Link
               key={lead.id}
-              href={`/app/atendimentos?lead=${lead.id}`}
+              href={`/app/leads?lead=${lead.id}`}
               className={cn(
                 "rounded-lg border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md"
               )}
@@ -232,10 +234,10 @@ export default function DashboardPage() {
         })}
       </div>
       <Link
-        href="/app/atendimentos"
+        href="/app/leads"
         className="mt-4 block w-full rounded-lg border py-2 text-center text-sm font-medium transition-colors hover:bg-muted"
       >
-        Ver todas as conversas
+        Ver todos os leads
       </Link>
     </div>
   )

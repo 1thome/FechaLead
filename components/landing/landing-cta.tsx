@@ -55,7 +55,7 @@ export function LandingCta() {
             transition={{ duration: 0.5, delay: 0.25 }}
             className="mt-6 text-lg text-slate-100 md:text-xl"
           >
-            Crie sua conta grátis e comece em minutos. A partir de R$ 97/mês.
+            Crie sua conta grátis e comece em minutos. R$ 249,90/mês.
           </motion.p>
 
           <motion.p
@@ -65,7 +65,7 @@ export function LandingCta() {
             transition={{ duration: 0.5, delay: 0.35 }}
             className="mt-2 text-sm text-slate-200/90"
           >
-            14 dias de teste grátis · Cancele quando quiser
+            Cancele quando quiser
           </motion.p>
 
           <motion.div

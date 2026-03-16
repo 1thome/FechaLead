@@ -15,10 +15,6 @@ const faqs = [
     a: "Sim! O FechaLead foi pensado especificamente para quem vende pelo WhatsApp e quer organizar leads e conversas.",
   },
   {
-    q: "Qual plano devo escolher?",
-    a: "Se está começando, o Starter (R$ 97/mês) é ideal. Para mais recursos e métricas, o Pro (R$ 197/mês) é o mais popular. Equipes maiores podem usar o Scale (R$ 397/mês).",
-  },
-  {
     q: "Quando terei acesso?",
     a: "Imediatamente após criar sua conta e ativar o plano. O acesso é liberado na hora.",
   },
@@ -31,8 +27,8 @@ const faqs = [
     a: "Sim. Oferecemos 7 dias de teste. Se não gostar, devolvemos seu dinheiro integralmente. Sem perguntas.",
   },
   {
-    q: "Posso mudar de plano depois?",
-    a: "Sim. Você pode fazer upgrade ou downgrade a qualquer momento. A diferença é cobrada proporcionalmente.",
+    q: "O plano é mensal ou anual?",
+    a: "O plano Founder é cobrado mensalmente (R$ 249,90/mês). Você pode cancelar a qualquer momento.",
   },
 ]
 

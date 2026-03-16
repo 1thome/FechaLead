@@ -109,10 +109,10 @@ export function LeadListView({ search = "", statusFilter = "all" }: LeadListView
                 </td>
                 <td className="px-4 py-3">
                   <Link
-                    href={`/app/atendimentos?lead=${lead.id}`}
+                    href={`/app/leads?lead=${lead.id}`}
                     className="inline-flex items-center gap-1 text-primary hover:underline"
                   >
-                    Conversar
+                    Ver detalhes
                     <ChevronRight className="h-4 w-4" />
                   </Link>
                 </td>

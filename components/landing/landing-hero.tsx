@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { scrollToSection } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { Play, ArrowRight, Check } from "lucide-react"
 
@@ -28,7 +29,7 @@ export function LandingHero() {
             className="mt-5 text-lg text-muted-foreground md:text-xl"
           >
             O CRM feito para quem vende pelo WhatsApp. Organize leads, acompanhe
-            o funil e feche mais vendas — a partir de R$ 97/mês.
+            o funil e feche mais vendas — R$ 249,90/mês.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -52,10 +53,13 @@ export function LandingHero() {
               className="gap-2 transition-all duration-300 hover:scale-[1.02] hover:border-primary/50 hover:bg-primary/5"
               asChild
             >
-              <Link href="#produto">
+              <a
+                href="#produto"
+                onClick={(e) => { e.preventDefault(); scrollToSection("produto") }}
+              >
                 <Play className="h-4 w-4" />
                 Ver demonstração
-              </Link>
+              </a>
             </Button>
           </motion.div>
           <motion.div
@@ -69,24 +73,20 @@ export function LandingHero() {
               className="flex cursor-default items-center gap-2 rounded-full bg-primary/5 px-4 py-2"
             >
               <Check className="h-4 w-4 text-primary" />
-              14 dias grátis
-            </motion.span>
-            <motion.span
-              whileHover={{ scale: 1.02 }}
-              className="flex cursor-default items-center gap-2 rounded-full bg-primary/5 px-4 py-2"
-            >
-              <Check className="h-4 w-4 text-primary" />
               Cancele quando quiser
             </motion.span>
-            <Link href="#planos">
+            <a
+              href="#planos"
+              onClick={(e) => { e.preventDefault(); scrollToSection("planos") }}
+            >
               <motion.span
                 whileHover={{ scale: 1.02 }}
                 className="flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 font-medium text-primary transition-colors hover:bg-primary/20"
               >
                 <Check className="h-4 w-4" />
-                Planos a partir de R$ 97/mês
+                Plano Founder — R$ 249,90/mês
               </motion.span>
-            </Link>
+            </a>
           </motion.div>
         </div>
       </div>

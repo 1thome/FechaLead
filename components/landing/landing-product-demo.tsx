@@ -5,12 +5,11 @@ import { motion, AnimatePresence } from "framer-motion"
 import {
   LayoutDashboard,
   Users,
-  MessageSquare,
   ChevronRight,
   Phone,
   Mail,
   TrendingUp,
-  Zap,
+  Target,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Lead } from "@/types/lead"
@@ -32,34 +31,6 @@ const DEMO_LEADS: Lead[] = [
   { id: "6", name: "Fernanda Dias", phone: "+55 11 99999-6666", status: "contato", lastInteraction: "2h atrás", createdAt: "2024-01-14T15:00:00Z" },
 ]
 
-const DEMO_CONVERSATIONS = [
-  { id: "c1", leadId: "1", leadName: "João Silva", lastMessage: "Qual o preço?", lastMessageAt: "10:05" },
-  { id: "c2", leadId: "2", leadName: "Maria Santos", lastMessage: "Estou analisando a proposta.", lastMessageAt: "11:30" },
-  { id: "c3", leadId: "3", leadName: "Pedro Oliveira", lastMessage: "Perfeito, fechamos!", lastMessageAt: "Ontem" },
-  { id: "c4", leadId: "4", leadName: "Ana Costa", lastMessage: "Obrigada pelo atendimento!", lastMessageAt: "3 dias" },
-  { id: "c5", leadId: "5", leadName: "Carlos Souza", lastMessage: "Oi, tenho interesse.", lastMessageAt: "5 min" },
-  { id: "c6", leadId: "6", leadName: "Fernanda Dias", lastMessage: "Pode enviar o orçamento?", lastMessageAt: "2h" },
-]
-
-const DEMO_MESSAGES: Record<string, { content: string; direction: "in" | "out" }[]> = {
-  c1: [
-    { content: "Olá! Gostaria de saber mais sobre o produto.", direction: "in" },
-    { content: "Claro! Posso te ajudar. Qual sua dúvida?", direction: "out" },
-    { content: "Qual o preço?", direction: "in" },
-  ],
-  c2: [
-    { content: "Bom dia! Já recebeu minha proposta?", direction: "out" },
-    { content: "Sim, estou analisando. Volto em breve.", direction: "in" },
-  ],
-  c3: [
-    { content: "Obrigado pela reunião!", direction: "out" },
-    { content: "Perfeito, fechamos!", direction: "in" },
-  ],
-  c4: [{ content: "Obrigada pelo atendimento!", direction: "in" }],
-  c5: [{ content: "Oi, tenho interesse.", direction: "in" }],
-  c6: [{ content: "Pode enviar o orçamento?", direction: "in" }],
-}
-
 const STATUS_OPTIONS = [
   { id: "all", label: "Todos" },
   { id: "novo", label: "Novo" },
@@ -72,7 +43,6 @@ const STATUS_OPTIONS = [
 const SIDEBAR_ITEMS = [
   { icon: LayoutDashboard, label: "Dashboard" },
   { icon: Users, label: "Leads" },
-  { icon: MessageSquare, label: "Atendimentos" },
 ] as const
 
 type NavItem = (typeof SIDEBAR_ITEMS)[number]["label"]
@@ -81,26 +51,11 @@ export function LandingProductDemo() {
   const [selectedLead, setSelectedLead] = useState<Lead | null>(DEMO_LEADS[0])
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const [activeNav, setActiveNav] = useState<NavItem>("Leads")
-  const [selectedConv, setSelectedConv] = useState<string | null>("c1")
-  const [chatInput, setChatInput] = useState("")
-  const [demoMessages, setDemoMessages] = useState(DEMO_MESSAGES)
 
   const filteredLeads =
     statusFilter === "all"
       ? DEMO_LEADS
       : DEMO_LEADS.filter((l) => l.status === statusFilter)
-
-  const handleSendMessage = () => {
-    if (!chatInput.trim() || !selectedConv) return
-    setDemoMessages((prev) => ({
-      ...prev,
-      [selectedConv]: [
-        ...(prev[selectedConv] || []),
-        { content: chatInput.trim(), direction: "out" as const },
-      ],
-    }))
-    setChatInput("")
-  }
 
   return (
     <section id="produto" className="py-14 md:py-20">
@@ -180,10 +135,10 @@ export function LandingProductDemo() {
                       </div>
                       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                         {[
-                          { label: "Leads novos", value: "12", icon: Users },
-                          { label: "Conversas ativas", value: "8", icon: MessageSquare },
-                          { label: "Taxa conversão", value: "23,5%", icon: TrendingUp },
-                          { label: "Mensagens hoje", value: "156", icon: Zap },
+                          { label: "Leads novos", value: "4", icon: Users },
+                          { label: "Leads ativos", value: "6", icon: Users },
+                          { label: "Taxa conversão", value: "16,7%", icon: TrendingUp },
+                          { label: "Leads fechados", value: "1", icon: Target },
                         ].map((stat) => {
                           const Icon = stat.icon
                           return (
@@ -286,109 +241,11 @@ export function LandingProductDemo() {
                     </motion.div>
                   )}
 
-                  {activeNav === "Atendimentos" && (
-                    <motion.div
-                      key="atendimentos"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 10 }}
-                      className="flex flex-1 flex-col"
-                    >
-                      <div className="border-b p-4">
-                        <h3 className="font-semibold">Conversas</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {DEMO_CONVERSATIONS.length} conversas ativas
-                        </p>
-                      </div>
-                      <div className="flex flex-1 overflow-hidden">
-                        <div className="w-64 shrink-0 border-r">
-                          {DEMO_CONVERSATIONS.map((conv) => (
-                            <button
-                              key={conv.id}
-                              type="button"
-                              onClick={() => setSelectedConv(conv.id)}
-                              className={cn(
-                                "flex w-full flex-col gap-1 border-b p-4 text-left transition-colors",
-                                selectedConv === conv.id
-                                  ? "bg-primary/10"
-                                  : "hover:bg-muted/50"
-                              )}
-                            >
-                              <p className="font-medium">{conv.leadName}</p>
-                              <p className="truncate text-xs text-muted-foreground">
-                                {conv.lastMessage}
-                              </p>
-                              <span className="text-xs text-muted-foreground">
-                                {conv.lastMessageAt}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                        <div className="flex flex-1 flex-col">
-                          {selectedConv ? (
-                            <>
-                              <div className="flex-1 space-y-4 overflow-auto p-4">
-                                {(demoMessages[selectedConv] || []).map((msg, i) => (
-                                  <div
-                                    key={i}
-                                    className={cn(
-                                      "flex",
-                                      msg.direction === "out" ? "justify-end" : "justify-start"
-                                    )}
-                                  >
-                                    <div
-                                      className={cn(
-                                        "max-w-[80%] rounded-lg px-4 py-2",
-                                        msg.direction === "out"
-                                          ? "bg-primary text-primary-foreground"
-                                          : "bg-muted"
-                                      )}
-                                    >
-                                      <p className="text-sm">{msg.content}</p>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                              <div className="flex gap-2 border-t p-4">
-                                <input
-                                  type="text"
-                                  placeholder="Digite sua mensagem..."
-                                  value={chatInput}
-                                  onChange={(e) => setChatInput(e.target.value)}
-                                  onKeyDown={(e) =>
-                                    e.key === "Enter" && handleSendMessage()
-                                  }
-                                  className="flex-1 rounded-lg border bg-background px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
-                                />
-                                <button
-                                  type="button"
-                                  onClick={handleSendMessage}
-                                  disabled={!chatInput.trim()}
-                                  className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
-                                >
-                                  Enviar
-                                </button>
-                              </div>
-                            </>
-                          ) : (
-                            <div className="flex flex-1 items-center justify-center text-muted-foreground">
-                              <p className="text-sm">Selecione uma conversa</p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
                 </AnimatePresence>
               </div>
 
               {/* Painel direito - detalhes (Leads e Dashboard) */}
-              <div
-                className={cn(
-                  "hidden w-80 shrink-0 border-l p-6 lg:block",
-                  activeNav === "Atendimentos" ? "hidden" : "bg-muted/20"
-                )}
-              >
+              <div className="hidden w-80 shrink-0 border-l bg-muted/20 p-6 lg:block">
                 {activeNav === "Leads" && (
                   <>
                     {selectedLead ? (
@@ -417,17 +274,6 @@ export function LandingProductDemo() {
                             Última interação: {selectedLead.lastInteraction}
                           </div>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setActiveNav("Atendimentos")
-                            const conv = DEMO_CONVERSATIONS.find((c) => c.leadId === selectedLead.id)
-                            setSelectedConv(conv?.id ?? DEMO_CONVERSATIONS[0].id)
-                          }}
-                          className="w-full rounded-lg bg-primary py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                        >
-                          Abrir conversa
-                        </button>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center py-12 text-center">

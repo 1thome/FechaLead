@@ -16,8 +16,6 @@ import {
   Bot,
   Bell,
   Clock,
-  Palette,
-  Download,
   Check,
   User,
   Settings,
@@ -417,47 +415,6 @@ function ConfiguracoesContent() {
                 onChange={(e) => setAwayMessage(e.target.value)}
               />
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-500/10">
-                <Palette className="h-5 w-5 text-slate-600" />
-              </div>
-              <div>
-                <CardTitle>Aparência</CardTitle>
-                <CardDescription>Tema e preferências visuais</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Altere o tema pelo ícone na barra superior.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                <Download className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <CardTitle>Exportar dados</CardTitle>
-                <CardDescription>Baixe seus leads e conversas</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <Button variant="outline" className="w-full justify-start">
-              Exportar leads (CSV)
-            </Button>
-            <Button variant="outline" className="w-full justify-start">
-              Exportar conversas
-            </Button>
           </CardContent>
         </Card>
       </div>

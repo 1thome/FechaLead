@@ -5,9 +5,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { getAutomations, createAutomation, updateAutomation, deleteAutomation } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { Plus, Zap, MoreVertical, Play, Pause, Trash2, Edit } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -17,18 +18,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import {
-  Plus,
-  Zap,
-  ArrowRight,
-  MoreVertical,
-  Play,
-  Pause,
-  Trash2,
-  Edit,
-  MessageSquare,
-  UserPlus,
-} from "lucide-react"
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -37,32 +26,22 @@ import {
 import { cn } from "@/lib/utils"
 import { Automation } from "@/types/automation"
 
-const automationTemplates = [
-  {
-    name: "Palavra-chave → Negociação",
-    trigger: "Mensagem contém",
-    triggerValue: "preço, orçamento, valor",
-    action: "Mover para",
-    actionValue: "Negociação",
-    icon: MessageSquare,
-  },
-  {
-    name: "Novo lead → Boas-vindas",
-    trigger: "Lead entra em",
-    triggerValue: "Novo Lead",
-    action: "Enviar mensagem",
-    actionValue: "Olá! Como posso ajudar?",
-    icon: UserPlus,
-  },
-  {
-    name: "Sem resposta → Follow-up",
-    trigger: "Sem resposta por",
-    triggerValue: "24 horas",
-    action: "Enviar mensagem",
-    actionValue: "Oi! Ainda posso ajudar?",
-    icon: MessageSquare,
-  },
-]
+const FOLLOWUP_STORAGE = "fechalead-followup"
+const POSVENDA_STORAGE = "fechalead-posvenda"
+
+const DEFAULT_FOLLOWUP = {
+  enabled: true,
+  hours: 24,
+  message:
+    "Olá! Só passando para saber se você conseguiu ver nossa proposta. Posso te ajudar com algo?",
+}
+
+const DEFAULT_POSVENDA = {
+  enabled: true,
+  days: 2,
+  message:
+    "Olá! Esperamos que tenha gostado do atendimento. Poderia nos contar como foi sua experiência?",
+}
 
 function AutomationFormDialog({
   open,
@@ -134,13 +113,13 @@ function AutomationFormDialog({
         <DialogHeader>
           <DialogTitle>{automation ? "Editar automação" : "Nova automação"}</DialogTitle>
           <DialogDescription>
-            Configure o gatilho e a ação que serão executados automaticamente.
+            Crie uma regra: quando algo acontecer, o sistema faz algo automaticamente pra você.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-5 py-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome</Label>
+              <Label htmlFor="name">Dê um apelido pra essa regra</Label>
               <Input
                 id="name"
                 placeholder="Ex: Preço → Negociação"
@@ -148,33 +127,45 @@ function AutomationFormDialog({
                 onChange={(e) => setName(e.target.value)}
                 required
               />
+              <p className="text-xs text-muted-foreground">
+                Um nome curto pra você encontrar essa regra depois. Ex: Preço → Negociação
+              </p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="trigger">Gatilho (SE)</Label>
+              <Label htmlFor="trigger">O que precisa acontecer?</Label>
               <Input
                 id="trigger"
-                placeholder="Ex: Mensagem contém 'preço'"
+                placeholder="Ex: O lead envia mensagem com a palavra 'preço'"
                 value={trigger}
                 onChange={(e) => setTrigger(e.target.value)}
                 required
               />
+              <p className="text-xs text-muted-foreground">
+                Quando o lead fizer isso, a regra dispara. Ex: O lead envia mensagem com a palavra 'preço' ou 'quanto custa'.
+              </p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="action">Ação (ENTÃO)</Label>
+              <Label htmlFor="action">O que o sistema faz sozinho?</Label>
               <Input
                 id="action"
-                placeholder="Ex: Mover para coluna Negociação"
+                placeholder="Ex: Mover o lead para a coluna Negociação"
                 value={action}
                 onChange={(e) => setAction(e.target.value)}
                 required
               />
+              <p className="text-xs text-muted-foreground">
+                A ação automática. Ex: Mover o lead para a coluna Negociação ou Enviar mensagem de boas-vindas.
+              </p>
             </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={isPending || !name.trim() || !trigger.trim() || !action.trim()}>
+            <Button
+              type="submit"
+              disabled={isPending || !name.trim() || !trigger.trim() || !action.trim()}
+            >
               {automation ? "Salvar" : "Criar"}
             </Button>
           </DialogFooter>
@@ -221,10 +212,37 @@ function DeleteConfirmDialog({
 
 export default function TarefasPage() {
   const queryClient = useQueryClient()
-  const [showTemplates, setShowTemplates] = useState(false)
   const [createOpen, setCreateOpen] = useState(false)
   const [editingAuto, setEditingAuto] = useState<Automation | null>(null)
   const [deletingAuto, setDeletingAuto] = useState<Automation | null>(null)
+
+  const [followup, setFollowup] = useState(DEFAULT_FOLLOWUP)
+  const [posvenda, setPosvenda] = useState(DEFAULT_POSVENDA)
+  const [followupSaved, setFollowupSaved] = useState(false)
+  const [posvendaSaved, setPosvendaSaved] = useState(false)
+
+  useEffect(() => {
+    try {
+      const f = localStorage.getItem(FOLLOWUP_STORAGE)
+      if (f) setFollowup(JSON.parse(f))
+      const p = localStorage.getItem(POSVENDA_STORAGE)
+      if (p) setPosvenda(JSON.parse(p))
+    } catch {
+      /* ignore */
+    }
+  }, [])
+
+  const saveFollowup = () => {
+    localStorage.setItem(FOLLOWUP_STORAGE, JSON.stringify(followup))
+    setFollowupSaved(true)
+    setTimeout(() => setFollowupSaved(false), 2000)
+  }
+
+  const savePosvenda = () => {
+    localStorage.setItem(POSVENDA_STORAGE, JSON.stringify(posvenda))
+    setPosvendaSaved(true)
+    setTimeout(() => setPosvendaSaved(false), 2000)
+  }
 
   const { data: automations, isLoading } = useQuery({
     queryKey: ["automations"],
@@ -247,16 +265,6 @@ export default function TarefasPage() {
 
   const invalidateAutomations = () => queryClient.invalidateQueries({ queryKey: ["automations"] })
 
-  const handleUseTemplate = (tpl: (typeof automationTemplates)[0]) => {
-    setShowTemplates(false)
-    createAutomation({
-      name: tpl.name,
-      trigger: `${tpl.trigger} "${tpl.triggerValue}"`,
-      action: `${tpl.action} "${tpl.actionValue}"`,
-      isActive: true,
-    }).then(() => invalidateAutomations())
-  }
-
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -269,15 +277,13 @@ export default function TarefasPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Tarefas e automações</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Automações</h1>
           <p className="text-muted-foreground">
             Crie regras automáticas para seu fluxo de vendas
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setShowTemplates(!showTemplates)}>
-            Ver templates
-          </Button>
+          <Button variant="outline">Ver templates</Button>
           <Button onClick={() => setCreateOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
             Criar automação
@@ -285,43 +291,103 @@ export default function TarefasPage() {
         </div>
       </div>
 
-      {showTemplates && (
-        <Card className="border-primary/30 bg-primary/5">
-          <CardHeader>
-            <CardTitle className="text-base">Templates prontos</CardTitle>
-            <CardDescription>
-              Clique para usar como base
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {automationTemplates.map((tpl) => {
-                const Icon = tpl.icon
-                return (
-                  <button
-                    key={tpl.name}
-                    type="button"
-                    onClick={() => handleUseTemplate(tpl)}
-                    className="flex flex-col gap-2 rounded-lg border bg-card p-4 text-left transition-colors hover:border-primary hover:bg-accent/50"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Icon className="h-4 w-4 text-primary" />
-                      <span className="font-medium text-sm">{tpl.name}</span>
-                    </div>
-                    <div className="space-y-1 text-xs text-muted-foreground">
-                      <p>SE {tpl.trigger} &quot;{tpl.triggerValue}&quot;</p>
-                      <p>ENTÃO {tpl.action} &quot;{tpl.actionValue}&quot;</p>
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
+      {/* Follow-up e pós-venda */}
       <div>
-        <h2 className="mb-4 font-semibold">Suas automações</h2>
+        <h2 className="mb-4 text-lg font-semibold">Follow-up e pós-venda</h2>
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Follow-up automático</CardTitle>
+              <CardDescription>
+                Envia mensagem quando o cliente não responder por um tempo
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="followup-toggle">Ativar</Label>
+                <Switch
+                  id="followup-toggle"
+                  checked={followup.enabled}
+                  onCheckedChange={(v) => setFollowup((p) => ({ ...p, enabled: v }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="followup-hours">Horas sem resposta</Label>
+                <Input
+                  id="followup-hours"
+                  type="number"
+                  min={1}
+                  value={followup.hours}
+                  onChange={(e) =>
+                    setFollowup((p) => ({ ...p, hours: parseInt(e.target.value) || 24 }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="followup-message">Mensagem</Label>
+                <textarea
+                  id="followup-message"
+                  rows={3}
+                  className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  value={followup.message}
+                  onChange={(e) => setFollowup((p) => ({ ...p, message: e.target.value }))}
+                />
+              </div>
+              <Button onClick={saveFollowup} className="w-full" disabled={followupSaved}>
+                {followupSaved ? "Salvo!" : "Salvar"}
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Pós-venda automático</CardTitle>
+              <CardDescription>
+                Envia pedido de avaliação X dias após a venda
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="posvenda-toggle">Ativar</Label>
+                <Switch
+                  id="posvenda-toggle"
+                  checked={posvenda.enabled}
+                  onCheckedChange={(v) => setPosvenda((p) => ({ ...p, enabled: v }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="posvenda-days">Dias após venda</Label>
+                <Input
+                  id="posvenda-days"
+                  type="number"
+                  min={1}
+                  value={posvenda.days}
+                  onChange={(e) =>
+                    setPosvenda((p) => ({ ...p, days: parseInt(e.target.value) || 2 }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="posvenda-message">Mensagem</Label>
+                <textarea
+                  id="posvenda-message"
+                  rows={3}
+                  className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  value={posvenda.message}
+                  onChange={(e) => setPosvenda((p) => ({ ...p, message: e.target.value }))}
+                />
+              </div>
+              <Button onClick={savePosvenda} className="w-full" disabled={posvendaSaved}>
+                {posvendaSaved ? "Salvo!" : "Salvar"}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Suas automações */}
+      <div>
+        <h2 className="mb-4 text-lg font-semibold">Suas automações</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {automations?.map((auto) => (
             <Card
@@ -346,12 +412,14 @@ export default function TarefasPage() {
                     </div>
                     <div>
                       <CardTitle className="text-base">{auto.name}</CardTitle>
-                      <Badge
-                        variant={auto.isActive ? "default" : "secondary"}
-                        className="mt-1 text-xs"
+                      <span
+                        className={cn(
+                          "mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium",
+                          auto.isActive ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
+                        )}
                       >
                         {auto.isActive ? "Ativa" : "Pausada"}
-                      </Badge>
+                      </span>
                     </div>
                   </div>
                   <DropdownMenu>
@@ -405,7 +473,7 @@ export default function TarefasPage() {
                     </span>
                     <span className="text-sm">{auto.trigger}</span>
                   </div>
-                  <ArrowRight className="my-2 h-4 w-4 text-muted-foreground" />
+                  <div className="my-2 text-muted-foreground">→</div>
                   <div className="flex items-center gap-2">
                     <span className="rounded bg-primary/20 px-2 py-0.5 text-xs font-medium text-primary">
                       ENTÃO
@@ -413,30 +481,11 @@ export default function TarefasPage() {
                     <span className="text-sm">{auto.action}</span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Criada em {new Date(auto.createdAt).toLocaleDateString("pt-BR")}</span>
-                </div>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
-
-      <Card className="border-dashed">
-        <CardContent className="flex flex-col items-center justify-center py-16">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-            <Zap className="h-8 w-8 text-muted-foreground" />
-          </div>
-          <h3 className="mb-2 font-semibold">Crie sua primeira automação</h3>
-          <p className="mb-6 max-w-sm text-center text-sm text-muted-foreground">
-            Exemplo: SE mensagem contém &quot;preço&quot; ENTÃO mover lead para coluna &quot;Negociação&quot;
-          </p>
-          <Button onClick={() => setCreateOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Nova automação
-          </Button>
-        </CardContent>
-      </Card>
 
       <AutomationFormDialog
         open={createOpen}

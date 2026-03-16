@@ -98,14 +98,17 @@ export async function deleteAutomation(id: string): Promise<void> {
   mockAutomations = mockAutomations.filter((a) => a.id !== id)
 }
 
-// Métricas para dashboard
+// Métricas para dashboard (consistentes com mockLeads - 6 leads)
 export async function getDashboardMetrics() {
   await delay(400)
+  const total = mockLeads.length
+  const fechados = mockLeads.filter((l) => l.status === "fechado").length
+  const ativos = mockLeads.filter((l) => !["fechado", "perdido"].includes(l.status)).length
   return {
-    newLeads: 12,
-    activeConversations: 8,
-    conversionRate: 23.5,
-    messagesToday: 156,
-    leadsPerDay: [5, 8, 12, 7, 15, 10, 14],
+    newLeads: 4, // últimos 7 dias (João, Maria, Pedro, Fernanda)
+    activeLeads: ativos,
+    conversionRate: total > 0 ? Math.round((fechados / total) * 1000) / 10 : 0,
+    closedLeads: fechados,
+    leadsPerDay: [1, 0, 1, 1, 0, 2, 1], // Dom-Sáb, soma 6
   }
 }

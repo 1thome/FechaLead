@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LandingLogo } from "@/components/landing/landing-logo"
 import { motion } from "framer-motion"
+import { scrollToSection } from "@/lib/utils"
 
 export function LandingHeader() {
   return (
@@ -18,36 +19,41 @@ export function LandingHeader() {
         <LandingLogo href="/" />
 
         <nav className="hidden items-center gap-8 md:flex">
-          <Link
+          <a
             href="#problemas"
+            onClick={(e) => { e.preventDefault(); scrollToSection("problemas") }}
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Problemas
-          </Link>
-          <Link
+          </a>
+          <a
             href="#solucao"
+            onClick={(e) => { e.preventDefault(); scrollToSection("solucao") }}
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Solução
-          </Link>
-          <Link
+          </a>
+          <a
             href="#produto"
+            onClick={(e) => { e.preventDefault(); scrollToSection("produto") }}
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Produto
-          </Link>
-          <Link
+          </a>
+          <a
             href="#planos"
+            onClick={(e) => { e.preventDefault(); scrollToSection("planos") }}
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Planos
-          </Link>
-          <Link
+          </a>
+          <a
             href="#faq"
+            onClick={(e) => { e.preventDefault(); scrollToSection("faq") }}
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             FAQ
-          </Link>
+          </a>
         </nav>
 
         <div className="flex items-center gap-3">

@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -13,11 +14,13 @@ import {
 import { Search, LogOut, User, Settings } from "lucide-react"
 import { NotificationDropdown } from "./notification-dropdown"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { useUserStore } from "@/store/useUserStore"
+import { useAuthStore } from "@/store/useAuthStore"
 import Link from "next/link"
 
 export function Topbar() {
-  const user = useUserStore((state) => state.user)
+  const router = useRouter()
+  const user = useAuthStore((state) => state.user)
+  const logout = useAuthStore((state) => state.logout)
 
   return (
     <header className="flex h-14 items-center justify-between border-b bg-card/95 px-6 backdrop-blur-md">
@@ -30,7 +33,9 @@ export function Topbar() {
           />
         </div>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-4">
+        <div className="h-6 w-px shrink-0 bg-border" aria-hidden />
+        <div className="flex items-center gap-2">
         <ThemeToggle />
         <NotificationDropdown />
         <DropdownMenu>
@@ -53,26 +58,31 @@ export function Topbar() {
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/dashboard/configuracoes" className="cursor-pointer">
+              <Link href="/app/configuracoes?tab=perfil" className="cursor-pointer">
                 <User className="mr-2 h-4 w-4" />
                 Perfil
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/dashboard/configuracoes" className="cursor-pointer">
+              <Link href="/app/configuracoes" className="cursor-pointer">
                 <Settings className="mr-2 h-4 w-4" />
                 Configurações
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/login" className="cursor-pointer text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
-                Sair
-              </Link>
+            <DropdownMenuItem
+              className="cursor-pointer text-destructive"
+              onClick={() => {
+                logout()
+                router.push("/login")
+              }}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Sair
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       </div>
     </header>
   )

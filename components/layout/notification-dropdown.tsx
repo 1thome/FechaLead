@@ -1,12 +1,13 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Bell, MessageSquare, UserPlus, Zap, CheckCheck } from "lucide-react"
+import { Bell, MessageSquare, UserPlus, Zap, CheckCheck, ChevronRight } from "lucide-react"
 import { useNotificationStore } from "@/store/useNotificationStore"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
@@ -22,8 +23,16 @@ interface NotificationDropdownProps {
 }
 
 export function NotificationDropdown({ align = "end" }: NotificationDropdownProps) {
+  const router = useRouter()
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
     useNotificationStore()
+
+  const handleNotificationClick = (notif: { id: string; href?: string }) => {
+    markAsRead(notif.id)
+    if (notif.href) {
+      router.push(notif.href)
+    }
+  }
 
   return (
     <DropdownMenu>
@@ -67,10 +76,11 @@ export function NotificationDropdown({ align = "end" }: NotificationDropdownProp
               return (
                 <button
                   key={notif.id}
-                  onClick={() => markAsRead(notif.id)}
+                  onClick={() => handleNotificationClick(notif)}
                   className={cn(
                     "flex w-full gap-3 border-b p-3 text-left transition-colors hover:bg-accent last:border-0",
-                    !notif.read && "bg-primary/5"
+                    !notif.read && "bg-primary/5",
+                    notif.href && "cursor-pointer"
                   )}
                 >
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
@@ -85,13 +95,16 @@ export function NotificationDropdown({ align = "end" }: NotificationDropdownProp
                     </p>
                     <p className="mt-0.5 text-xs text-muted-foreground">{notif.time}</p>
                   </div>
+                  {notif.href && (
+                    <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  )}
                 </button>
               )
             })
           )}
         </div>
         <div className="border-t p-2">
-          <Link href="/dashboard/conversas">
+          <Link href="/app/atendimentos">
             <Button variant="ghost" size="sm" className="w-full text-xs">
               Ver todas as notificações
             </Button>

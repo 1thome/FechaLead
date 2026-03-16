@@ -1,8 +1,0 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/dashboard/leads/page": "app/dashboard/leads/page.js",
-  "/dashboard/automacoes/page": "app/dashboard/automacoes/page.js",
-  "/dashboard/conversas/page": "app/dashboard/conversas/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/dashboard/assinatura/page": "app/dashboard/assinatura/page.js"
-}

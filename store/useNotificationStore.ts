@@ -7,6 +7,8 @@ export interface Notification {
   time: string
   read: boolean
   type: "lead" | "message" | "system"
+  /** Link para onde navegar ao clicar */
+  href?: string
 }
 
 interface NotificationState {
@@ -24,6 +26,7 @@ const mockNotifications: Notification[] = [
     time: "2 min atrás",
     read: false,
     type: "lead",
+    href: "/app/atendimentos?lead=1",
   },
   {
     id: "2",
@@ -32,6 +35,7 @@ const mockNotifications: Notification[] = [
     time: "15 min atrás",
     read: false,
     type: "message",
+    href: "/app/atendimentos?lead=2",
   },
   {
     id: "3",
@@ -40,6 +44,7 @@ const mockNotifications: Notification[] = [
     time: "1 hora atrás",
     read: true,
     type: "system",
+    href: "/app/leads",
   },
   {
     id: "4",
@@ -48,6 +53,7 @@ const mockNotifications: Notification[] = [
     time: "2 horas atrás",
     read: true,
     type: "system",
+    href: "/app/configuracoes",
   },
 ]
 

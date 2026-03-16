@@ -50,6 +50,9 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   * {
     @apply border-border;
   }
@@ -190,6 +193,13 @@
   left: 20px;
 }
 
+.cloud-5::after {
+  width: 60px;
+  height: 60px;
+  top: -30px;
+  right: 25px;
+}
+
 .cloud-6 {
   width: 260px;
   height: 84px;
@@ -255,4 +265,23 @@
 }
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Scrollbar vertical para áreas de rolagem */
+.scrollbar-vertical {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.4) transparent;
+}
+.scrollbar-vertical::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollbar-vertical::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-vertical::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.4);
+  border-radius: 4px;
+}
+.scrollbar-vertical::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.6);
 }

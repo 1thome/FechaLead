@@ -17,10 +17,10 @@ const mockUser: User = {
 }
 
 const mockLeads: Lead[] = [
-  { id: "1", name: "João Silva", phone: "+55 11 99999-1111", status: "novo", lastInteraction: "2 min atrás", createdAt: "2024-01-15T10:00:00Z" },
-  { id: "2", name: "Maria Santos", phone: "+55 11 99999-2222", status: "contato", lastInteraction: "1 hora atrás", createdAt: "2024-01-14T09:00:00Z" },
+  { id: "1", name: "João Silva", phone: "+55 11 99999-1111", email: "joao@email.com", status: "novo", lastInteraction: "2 min atrás", createdAt: "2024-01-15T10:00:00Z" },
+  { id: "2", name: "Maria Santos", phone: "+55 11 99999-2222", email: "maria@email.com", status: "contato", lastInteraction: "1 hora atrás", createdAt: "2024-01-14T09:00:00Z" },
   { id: "3", name: "Pedro Oliveira", phone: "+55 11 99999-3333", status: "negociacao", lastInteraction: "Ontem", createdAt: "2024-01-13T14:00:00Z" },
-  { id: "4", name: "Ana Costa", phone: "+55 11 99999-4444", status: "fechado", lastInteraction: "3 dias atrás", createdAt: "2024-01-10T11:00:00Z" },
+  { id: "4", name: "Ana Costa", phone: "+55 11 99999-4444", email: "ana@empresa.com", status: "fechado", lastInteraction: "3 dias atrás", createdAt: "2024-01-10T11:00:00Z" },
   { id: "5", name: "Carlos Lima", phone: "+55 11 99999-5555", status: "perdido", lastInteraction: "1 semana atrás", createdAt: "2024-01-05T16:00:00Z" },
   { id: "6", name: "Fernanda Souza", phone: "+55 11 99999-6666", status: "novo", lastInteraction: "5 min atrás", createdAt: "2024-01-15T11:30:00Z" },
 ]
@@ -38,9 +38,9 @@ const mockMessages: Record<string, Message[]> = {
 }
 
 const mockConversations: Conversation[] = [
-  { id: "1", leadId: "1", leadName: "João Silva", leadPhone: "+55 11 99999-1111", lastMessage: "Qual o preço?", lastMessageAt: "2024-01-15T10:05:00Z", unreadCount: 1 },
-  { id: "2", leadId: "2", leadName: "Maria Santos", leadPhone: "+55 11 99999-2222", lastMessage: "Sim, estou analisando. Volto em breve.", lastMessageAt: "2024-01-14T11:30:00Z", unreadCount: 0 },
-  { id: "3", leadId: "3", leadName: "Pedro Oliveira", leadPhone: "+55 11 99999-3333", lastMessage: "Perfeito, fechamos!", lastMessageAt: "2024-01-13T16:00:00Z", unreadCount: 0 },
+  { id: "1", leadId: "1", leadName: "João Silva", leadPhone: "+55 11 99999-1111", lastMessage: "Qual o preço?", lastMessageAt: "2024-01-15T10:05:00Z", unreadCount: 1, leadStatus: "novo" },
+  { id: "2", leadId: "2", leadName: "Maria Santos", leadPhone: "+55 11 99999-2222", lastMessage: "Sim, estou analisando. Volto em breve.", lastMessageAt: "2024-01-14T11:30:00Z", unreadCount: 0, leadStatus: "contato" },
+  { id: "3", leadId: "3", leadName: "Pedro Oliveira", leadPhone: "+55 11 99999-3333", lastMessage: "Perfeito, fechamos!", lastMessageAt: "2024-01-13T16:00:00Z", unreadCount: 0, leadStatus: "negociacao" },
 ]
 
 let mockAutomations: Automation[] = [

@@ -1,4 +1,5 @@
 import { Message } from "./message"
+import type { LeadStatus } from "./lead"
 
 export interface Conversation {
   id: string
@@ -8,5 +9,6 @@ export interface Conversation {
   lastMessage: string
   lastMessageAt: string
   unreadCount: number
+  leadStatus?: LeadStatus
   messages?: Message[]
 }

@@ -94,7 +94,7 @@ export const LeadCardStatic = memo(function LeadCardStatic({
                   </DropdownMenuSub>
                 )}
                 <DropdownMenuItem asChild>
-                  <Link href="/dashboard/conversas">
+                  <Link href="/app/atendimentos">
                     <MessageSquare className="mr-2 h-4 w-4" />
                     Ver conversa
                   </Link>

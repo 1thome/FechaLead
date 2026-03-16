@@ -48,7 +48,7 @@ export function AddContactDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="w-full gap-2">
+        <Button size="sm" className="shrink-0 gap-2">
           <UserPlus className="h-4 w-4" />
           Novo contato
         </Button>

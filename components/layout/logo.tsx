@@ -12,7 +12,7 @@ interface LogoProps {
 export function Logo({ collapsed, className }: LogoProps) {
   return (
     <Link
-      href="/dashboard"
+      href="/app"
       className={cn(
         "flex items-center gap-2 font-semibold text-primary transition-opacity hover:opacity-80",
         collapsed && "justify-center",
@@ -24,9 +24,9 @@ export function Logo({ collapsed, className }: LogoProps) {
         <MessageCircle className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 text-primary" />
       </div>
       {!collapsed && (
-        <span className="whitespace-nowrap">
-          <span className="text-primary">Lead</span>
-          <span className="text-foreground">Flow</span>
+        <span className="whitespace-nowrap font-semibold">
+          <span className="text-primary">Fecha</span>
+          <span className="text-foreground">Lead</span>
         </span>
       )}
     </Link>

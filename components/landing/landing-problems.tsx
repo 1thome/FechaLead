@@ -53,7 +53,7 @@ export function LandingProblems() {
           viewport={{ once: true }}
           className="mx-auto max-w-2xl text-center"
         >
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
             Você se identifica com isso?
           </h2>
           <p className="mt-4 text-muted-foreground">

@@ -26,10 +26,6 @@ const faqs = [
     q: "Tem garantia?",
     a: "Sim. Oferecemos 7 dias de teste. Se não gostar, devolvemos seu dinheiro integralmente. Sem perguntas.",
   },
-  {
-    q: "O plano é mensal ou anual?",
-    a: "O plano Founder é cobrado mensalmente (R$ 249,90/mês). Você pode cancelar a qualquer momento.",
-  },
 ]
 
 export function LandingFaq() {

@@ -3,9 +3,8 @@ import { LandingHero } from "@/components/landing/landing-hero"
 import { LandingProblems } from "@/components/landing/landing-problems"
 import { LandingSolution } from "@/components/landing/landing-solution"
 import { LandingProductDemo } from "@/components/landing/landing-product-demo"
-import { LandingHowItWorks } from "@/components/landing/landing-how-it-works"
+import { LandingKanban } from "@/components/landing/landing-kanban"
 import { LandingBenefits } from "@/components/landing/landing-benefits"
-import { LandingSocialProof } from "@/components/landing/landing-social-proof"
 import { LandingPlans } from "@/components/landing/landing-plans"
 import { LandingFaq } from "@/components/landing/landing-faq"
 import { LandingCta } from "@/components/landing/landing-cta"
@@ -21,9 +20,8 @@ export default function Home() {
         <LandingProblems />
         <LandingSolution />
         <LandingProductDemo />
-        <LandingHowItWorks />
+        <LandingKanban />
         <LandingBenefits />
-        <LandingSocialProof />
         <LandingPlans />
         <LandingFaq />
         <LandingCta />

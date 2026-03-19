@@ -26,13 +26,11 @@ export const allPlans: MockPlan[] = [
     highlight: true,
     features: [
       "Conversas ilimitadas",
-      "Números WhatsApp ilimitados",
       "CRM completo",
       "Pipeline de vendas",
       "Automações e IA",
       "Relatórios avançados",
       "Integração WhatsApp",
-      "Suporte prioritário",
     ],
   },
 ]

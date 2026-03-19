@@ -10,9 +10,31 @@ import {
   Mail,
   TrendingUp,
   Target,
+  Search,
 } from "lucide-react"
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts"
 import { cn } from "@/lib/utils"
 import type { Lead } from "@/types/lead"
+
+const CHART_DATA = [
+  { name: "Seg", leads: 1 },
+  { name: "Ter", leads: 0 },
+  { name: "Qua", leads: 1 },
+  { name: "Qui", leads: 1 },
+  { name: "Sex", leads: 0 },
+  { name: "Sáb", leads: 2 },
+  { name: "Dom", leads: 1 },
+]
 
 const STATUS_LABELS: Record<string, string> = {
   novo: "Novo",
@@ -66,7 +88,7 @@ export function LandingProductDemo() {
           viewport={{ once: true }}
           className="mx-auto max-w-2xl text-center"
         >
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
             Veja o FechaLead por dentro
           </h2>
           <p className="mt-4 text-muted-foreground">
@@ -78,7 +100,7 @@ export function LandingProductDemo() {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mx-auto mt-16 max-w-6xl"
+          className="mx-auto mt-10 max-w-6xl sm:mt-16"
         >
           <div className="overflow-hidden rounded-2xl border border-white/20 bg-card/90 shadow-2xl backdrop-blur-sm dark:border-white/5 dark:bg-card/95">
             {/* Barra do navegador */}
@@ -127,13 +149,13 @@ export function LandingProductDemo() {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 10 }}
-                      className="flex flex-1 flex-col p-4"
+                      className="flex flex-1 flex-col overflow-auto p-4"
                     >
                       <div className="mb-4">
                         <h3 className="font-semibold">Visão geral</h3>
                         <p className="text-sm text-muted-foreground">Métricas do seu CRM</p>
                       </div>
-                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
                         {[
                           { label: "Leads novos", value: "4", icon: Users },
                           { label: "Leads ativos", value: "6", icon: Users },
@@ -144,20 +166,81 @@ export function LandingProductDemo() {
                           return (
                             <div
                               key={stat.label}
-                              className="rounded-xl border bg-card p-4 shadow-sm"
+                              className="rounded-lg border border-border/50 bg-muted/30 px-3 py-2.5"
                             >
                               <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">{stat.label}</span>
-                                <Icon className="h-4 w-4 text-primary" />
+                                <span className="text-xs text-muted-foreground">{stat.label}</span>
+                                <Icon className="h-3.5 w-3.5 text-primary" />
                               </div>
-                              <p className="mt-2 text-2xl font-bold">{stat.value}</p>
+                              <p className="mt-1 text-lg font-bold">{stat.value}</p>
                             </div>
                           )
                         })}
                       </div>
-                      <div className="mt-6">
-                        <h4 className="mb-2 text-sm font-medium">Leads recentes</h4>
-                        <div className="space-y-2">
+                      {/* Gráficos */}
+                      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                        <div className="overflow-hidden rounded-lg border border-border/50 bg-muted/20">
+                          <div className="border-b border-border/50 px-3 py-2">
+                            <p className="text-xs font-medium text-muted-foreground">Leads por dia</p>
+                          </div>
+                          <div className="h-32 px-2 py-1">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <AreaChart data={CHART_DATA}>
+                                <defs>
+                                  <linearGradient id="demoArea" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                                  </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="2 2" className="stroke-muted/50" />
+                                <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+                                <YAxis tick={{ fontSize: 10 }} width={18} />
+                                <Tooltip
+                                  contentStyle={{
+                                    fontSize: 12,
+                                    backgroundColor: "hsl(var(--card))",
+                                    border: "1px solid hsl(var(--border))",
+                                    borderRadius: "6px",
+                                  }}
+                                />
+                                <Area
+                                  type="monotone"
+                                  dataKey="leads"
+                                  stroke="hsl(var(--primary))"
+                                  fill="url(#demoArea)"
+                                  strokeWidth={1.5}
+                                />
+                              </AreaChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </div>
+                        <div className="overflow-hidden rounded-lg border border-border/50 bg-muted/20">
+                          <div className="border-b border-border/50 px-3 py-2">
+                            <p className="text-xs font-medium text-muted-foreground">Comparativo semanal</p>
+                          </div>
+                          <div className="h-32 px-2 py-1">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <BarChart data={CHART_DATA}>
+                                <CartesianGrid strokeDasharray="2 2" className="stroke-muted/50" />
+                                <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+                                <YAxis tick={{ fontSize: 10 }} width={18} />
+                                <Tooltip
+                                  contentStyle={{
+                                    fontSize: 12,
+                                    backgroundColor: "hsl(var(--card))",
+                                    border: "1px solid hsl(var(--border))",
+                                    borderRadius: "6px",
+                                  }}
+                                />
+                                <Bar dataKey="leads" fill="hsl(var(--primary))" radius={[3, 3, 0, 0]} />
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <h4 className="mb-2 text-xs font-medium text-muted-foreground">Leads recentes</h4>
+                        <div className="space-y-1">
                           {DEMO_LEADS.slice(0, 3).map((lead) => (
                             <button
                               key={lead.id}
@@ -166,10 +249,10 @@ export function LandingProductDemo() {
                                 setSelectedLead(lead)
                                 setActiveNav("Leads")
                               }}
-                              className="flex w-full items-center justify-between rounded-lg border bg-card p-3 text-left transition-colors hover:bg-muted/50"
+                              className="flex w-full items-center justify-between rounded-lg border border-border/50 bg-muted/20 px-3 py-2 text-left transition-colors hover:bg-muted/40"
                             >
-                              <span className="font-medium">{lead.name}</span>
-                              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
+                              <span className="text-sm font-medium">{lead.name}</span>
+                              <span className="rounded bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary">
                                 {STATUS_LABELS[lead.status]}
                               </span>
                             </button>
@@ -185,20 +268,29 @@ export function LandingProductDemo() {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 10 }}
-                      className="flex flex-1 flex-col"
+                      className="flex flex-1 flex-col min-h-0"
                     >
-                      <div className="border-b p-4">
-                        <div className="flex flex-wrap gap-2">
+                      <div className="space-y-3 border-b border-border/50 p-4">
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                          <input
+                            type="text"
+                            placeholder="Buscar contatos..."
+                            className="w-full rounded-lg border border-border/50 bg-muted/30 py-2 pl-9 pr-3 text-sm placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30"
+                            readOnly
+                          />
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
                           {STATUS_OPTIONS.map((opt) => (
                             <button
                               key={opt.id}
                               type="button"
                               onClick={() => setStatusFilter(opt.id)}
                               className={cn(
-                                "rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                                "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
                                 statusFilter === opt.id
                                   ? "bg-primary text-primary-foreground"
-                                  : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                                  : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
                               )}
                             >
                               {opt.label}
@@ -206,34 +298,34 @@ export function LandingProductDemo() {
                           ))}
                         </div>
                       </div>
-                      <div className="flex-1 overflow-auto p-4">
-                        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      <div className="flex-1 overflow-auto">
+                        <div className="divide-y divide-border/50">
                           {filteredLeads.map((lead) => (
                             <button
                               key={lead.id}
                               type="button"
                               onClick={() => setSelectedLead(lead)}
                               className={cn(
-                                "rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md",
-                                selectedLead?.id === lead.id &&
-                                  "ring-2 ring-primary border-primary/30"
+                                "flex w-full items-center gap-4 px-4 py-3 text-left transition-colors hover:bg-muted/30",
+                                selectedLead?.id === lead.id && "bg-primary/5"
                               )}
                             >
-                              <div className="flex items-start justify-between">
-                                <div>
-                                  <p className="font-medium">{lead.name}</p>
-                                  <p className="text-xs text-muted-foreground">
-                                    {lead.lastInteraction}
-                                  </p>
-                                </div>
-                                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
+                                {lead.name.charAt(0)}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate font-medium text-sm">{lead.name}</p>
+                                <p className="truncate text-xs text-muted-foreground">{lead.phone}</p>
+                              </div>
+                              <div className="shrink-0 text-right">
+                                <span className="block rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                                   {STATUS_LABELS[lead.status] || lead.status}
                                 </span>
+                                <span className="mt-0.5 block text-xs text-muted-foreground">
+                                  {lead.lastInteraction}
+                                </span>
                               </div>
-                              <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
-                                <span>{lead.phone}</span>
-                                <ChevronRight className="h-3 w-3" />
-                              </div>
+                              <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
                             </button>
                           ))}
                         </div>
@@ -244,56 +336,58 @@ export function LandingProductDemo() {
                 </AnimatePresence>
               </div>
 
-              {/* Painel direito - detalhes (Leads e Dashboard) */}
-              <div className="hidden w-80 shrink-0 border-l bg-muted/20 p-6 lg:block">
+              {/* Painel direito - detalhes do contato */}
+              <div className="hidden w-72 shrink-0 border-l border-border/50 bg-muted/10 lg:block">
                 {activeNav === "Leads" && (
                   <>
                     {selectedLead ? (
-                      <div className="space-y-4">
-                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/15 text-2xl font-semibold text-primary">
-                          {selectedLead.name.charAt(0)}
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">{selectedLead.name}</h3>
-                          <span className="mt-1 inline-block rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                      <div className="flex flex-col p-5">
+                        <div className="flex flex-col items-center border-b border-border/50 pb-5">
+                          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/20 text-xl font-semibold text-primary">
+                            {selectedLead.name.charAt(0)}
+                          </div>
+                          <h3 className="mt-3 font-semibold">{selectedLead.name}</h3>
+                          <span className="mt-1 rounded-md bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
                             {STATUS_LABELS[selectedLead.status] || selectedLead.status}
                           </span>
                         </div>
-                        <div className="space-y-3 border-t pt-4 text-sm">
-                          <div className="flex items-center gap-2 text-muted-foreground">
-                            <Phone className="h-4 w-4 shrink-0" />
-                            <span>{selectedLead.phone}</span>
+                        <div className="mt-4 space-y-3">
+                          <div className="flex items-center gap-3 rounded-lg bg-muted/30 px-3 py-2">
+                            <Phone className="h-4 w-4 shrink-0 text-muted-foreground" />
+                            <span className="text-sm">{selectedLead.phone}</span>
                           </div>
                           {selectedLead.email && (
-                            <div className="flex items-center gap-2 text-muted-foreground">
-                              <Mail className="h-4 w-4 shrink-0" />
-                              <span>{selectedLead.email}</span>
+                            <div className="flex items-center gap-3 rounded-lg bg-muted/30 px-3 py-2">
+                              <Mail className="h-4 w-4 shrink-0 text-muted-foreground" />
+                              <span className="truncate text-sm">{selectedLead.email}</span>
                             </div>
                           )}
-                          <div className="text-muted-foreground">
-                            Última interação: {selectedLead.lastInteraction}
+                          <div className="rounded-lg bg-muted/30 px-3 py-2">
+                            <p className="text-xs text-muted-foreground">Última interação</p>
+                            <p className="text-sm font-medium">{selectedLead.lastInteraction}</p>
                           </div>
                         </div>
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center justify-center py-12 text-center">
-                        <p className="text-sm text-muted-foreground">
-                          Selecione um lead para ver os detalhes
+                      <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
+                        <Users className="h-12 w-12 text-muted-foreground/50" />
+                        <p className="mt-3 text-sm text-muted-foreground">
+                          Selecione um contato para ver os detalhes
                         </p>
                       </div>
                     )}
                   </>
                 )}
                 {activeNav === "Dashboard" && (
-                  <div className="space-y-4">
+                  <div className="flex flex-col p-5">
                     <h3 className="font-semibold">Ação rápida</h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="mt-2 text-sm text-muted-foreground">
                       Clique em um lead recente para ver os detalhes ou ir para Leads.
                     </p>
                     <button
                       type="button"
                       onClick={() => setActiveNav("Leads")}
-                      className="w-full rounded-lg border bg-card py-2 text-sm font-medium transition-colors hover:bg-muted"
+                      className="mt-4 w-full rounded-lg border border-border/50 bg-muted/30 py-2.5 text-sm font-medium transition-colors hover:bg-muted/50"
                     >
                       Ver todos os leads
                     </button>

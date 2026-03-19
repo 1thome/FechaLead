@@ -13,13 +13,11 @@ const plan = {
   description: "Tudo que você precisa para vender mais pelo WhatsApp",
   features: [
     "Conversas ilimitadas",
-    "Números WhatsApp ilimitados",
     "CRM completo",
     "Pipeline de vendas",
     "Automações e IA",
     "Relatórios avançados",
     "Integração WhatsApp",
-    "Suporte prioritário",
   ],
   gradient: "from-primary/30 to-indigo-500/20",
 }
@@ -34,10 +32,10 @@ export function LandingPlans() {
           viewport={{ once: true }}
           className="mx-auto max-w-3xl text-center"
         >
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
             Plano Founder
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <p className="mt-3 text-base text-muted-foreground sm:mt-4 sm:text-lg">
             Um único plano com tudo que você precisa. Cancele quando quiser.
           </p>
         </motion.div>

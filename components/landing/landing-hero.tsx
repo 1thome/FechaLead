@@ -15,7 +15,7 @@ export function LandingHero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl"
+            className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl"
           >
             Organize seus leads e{" "}
             <span className="text-primary">
@@ -26,7 +26,7 @@ export function LandingHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-5 text-lg text-muted-foreground md:text-xl"
+            className="mt-4 text-base text-muted-foreground sm:mt-5 sm:text-lg md:text-xl"
           >
             O CRM feito para quem vende pelo WhatsApp. Organize leads, acompanhe
             o funil e feche mais vendas — R$ 249,90/mês.
@@ -66,7 +66,7 @@ export function LandingHero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="mt-10 flex flex-wrap items-center justify-center gap-8 text-sm text-muted-foreground"
+            className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground sm:mt-10 sm:gap-6 md:gap-8"
           >
             <motion.span
               whileHover={{ scale: 1.02 }}

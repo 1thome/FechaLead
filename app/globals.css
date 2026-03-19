@@ -53,6 +53,7 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem; /* Compensa o header fixo (h-16) */
+    overflow-x: hidden;
   }
   /* Compensa o header fixo ao rolar até as seções */
   section[id] {
@@ -62,7 +63,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-gradient-to-br from-sky-100 via-blue-50 to-indigo-100 text-foreground dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950;
+    @apply overflow-x-hidden bg-gradient-to-br from-sky-100 via-blue-50 to-indigo-100 text-foreground dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950;
   }
 }
 

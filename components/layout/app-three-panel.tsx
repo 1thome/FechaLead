@@ -10,7 +10,7 @@ const DEFAULT_RIGHT = 400
 
 interface AppThreePanelProps {
   center: React.ReactNode
-  right: React.ReactNode
+  right?: React.ReactNode
   centerClassName?: string
   rightClassName?: string
   resizable?: boolean
@@ -23,6 +23,7 @@ export function AppThreePanel({
   rightClassName,
   resizable = false,
 }: AppThreePanelProps) {
+  const hasRight = right != null
   const [rightWidth, setRightWidth] = useState(DEFAULT_RIGHT)
   const [isDragging, setIsDragging] = useState(false)
 
@@ -74,7 +75,7 @@ export function AppThreePanel({
       </div>
 
       {/* Alça de redimensionamento */}
-      {resizable && (
+      {hasRight && resizable && (
         <button
           type="button"
           aria-label="Redimensionar chat"
@@ -90,15 +91,17 @@ export function AppThreePanel({
       )}
 
       {/* Painel direito - detalhes */}
-      <aside
-        className={cn(
-          "scrollbar-vertical flex min-h-0 shrink-0 flex-col overflow-y-auto border-l bg-muted/10",
-          rightClassName
-        )}
-        style={{ width: resizable ? rightWidth : 400 }}
-      >
-        {right}
-      </aside>
+      {hasRight && (
+        <aside
+          className={cn(
+            "scrollbar-vertical flex min-h-0 shrink-0 flex-col overflow-y-auto border-l bg-muted/10",
+            rightClassName
+          )}
+          style={{ width: resizable ? rightWidth : 400 }}
+        >
+          {right}
+        </aside>
+      )}
     </div>
   )
 }

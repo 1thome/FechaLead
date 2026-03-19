@@ -17,13 +17,11 @@ const plan = {
   description: "Tudo que você precisa para vender mais pelo WhatsApp",
   features: [
     "Conversas ilimitadas",
-    "Números WhatsApp ilimitados",
     "CRM completo",
     "Pipeline de vendas",
     "Automações e IA",
     "Relatórios avançados",
     "Integração WhatsApp",
-    "Suporte prioritário",
   ],
   gradient: "from-primary/30 via-indigo-500/20 to-purple-500/10",
 }
